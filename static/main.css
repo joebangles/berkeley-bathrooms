@@ -1,0 +1,37 @@
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.noscroll {
+    position: fixed; 
+    top: var(--st, 0);
+    inline-size: 100%;
+    overflow: hidden; /* Hide scrollbars */
+}
+
+.building:hover {
+    opacity: 100%i ;
+}
+
+.building {
+    opacity: 50%;
+    position: absolute;
+    z-index: 1 ;
+    border: 1px solid black;
+}
+
+canvas {
+    opacity: 100%;
+    position: absolute;
+}
+
+#sidebar {
+    position: absolute;
+    right: 2%;
+    top: 10%;
+    height: 80%;
+    width: 20%;
+    background-color: red;
+    opacity: 0;
+}

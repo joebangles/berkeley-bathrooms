@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Main</title>
+        <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
+    </head>
+    
+    <body width="100vw" height="100vh">
+        <!-- <img src="../../resources/ucbmap3.png" id="bg_map"> -->
+        <canvas id="canvas" width="100vw" height="100vh"></canvas>
+        <canvas id="overlay-canvas" width="100vw" height="100vh"></canvas>
+        <div id="sidebar"></div>
+        <script type="module" src="{{url_for('static', filename='main.js')}}"></script>
+    </body>
+</html>
