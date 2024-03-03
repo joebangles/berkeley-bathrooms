@@ -52,6 +52,12 @@ for(let building_info of coordinates){
         img_element.style.top = building_info.top * contextScale + "px"
         img_element.style.width = img_element.width * contextScale + "px"
         img_element.style.height = img_element.height * contextScale + "px"
+
+        overlay_ctx.drawImage(img_element, 
+            building_info.left * contextScale, 
+            building_info.top * contextScale, 
+            img_element.width * contextScale, 
+            img_element.height * contextScale)
     }
 }
 
@@ -110,9 +116,11 @@ function onScroll(e){
     let direction = -Math.sign(e.deltaY)
 
     let worldCoordinates = screenToWorld([e.clientX, e.clientY])
+    // console.log(worldCoordinates)
 
     contextScale = Math.min(Math.max(contextScale * (1 + (zoomSpeed * direction)), zoomRange[0]), zoomRange[1])
     let adjustedScreenCoordinates = worldToScreen(worldCoordinates)
+    // console.log(adjustedScreenCoordinates)
 
     currentTranslation[0] -= adjustedScreenCoordinates[0] - e.clientX
     currentTranslation[1] -= adjustedScreenCoordinates[1] - e.clientY
@@ -135,9 +143,29 @@ function worldToScreen(coordinates){
     ]
 }
 
+function findBuilding(location){
+    // console.log("yo")
+    let which_building = null
+    for (let building_info of coordinates){
+        let building_dimensions = [building_images[building_info.name][1] * contextScale, building_images[building_info.name][2] * contextScale]
+        let building_location = worldToScreen([building_info.left / backgroundImage.width, building_info.top / backgroundImage.height])
+        
+        if(location[0] >= building_location[0] && 
+           location[0] <= building_location[0] + building_dimensions[0] && 
+           location[1] >= building_location[1]  && 
+           location[1] <= building_location[1] + building_dimensions[1]){
+            console.log("Yay")
+            which_building = building_info.name
+            break;
+        }
+    }
+
+    return which_building
+}
+
 function onClick(e){
     if(overlay_ctx.getImageData(e.clientX, e.clientY,1,1).data[3] != 0){
-        console.log("hit") 
+        console.log(findBuilding([e.clientX, e.clientY])) 
     }
 }
 
