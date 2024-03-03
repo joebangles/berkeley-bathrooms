@@ -15,14 +15,14 @@ const overlayCanvas = document.getElementById("overlay-canvas")
 const overlay_ctx = overlayCanvas.getContext("2d", { willReadFrequently: true })
 overlayCanvas.width = window.innerWidth
 overlayCanvas.height = window.innerHeight
-// overlayCanvas.style.backgroundColor = "green"
-// overlayCanvas.style.opacity = "50%"
 overlayCanvas.style.zIndex = 2
 
 // Initialize scale and offset logic
 const zoomSpeed = 0.1
 const startingScale = 1
 let contextScale = startingScale
+let targettedBuilding = null
+let minimumDrag = 5;
 
 // Draw background image
 const backgroundImageDimensions = [6600,3178]
@@ -65,7 +65,6 @@ for(let building_info of coordinates){
     }
 }
 
-
 function drawMap(position){
     ctx.clearRect(0, 0, mainCanvas.width, mainCanvas.height)
     ctx.drawImage(backgroundImage, 
@@ -80,12 +79,17 @@ function drawBuildings(position){
     for(let building of coordinates){
         let img_data = building_images[building.name]
         let img = img_data[0]
-
+        if(building.name == targettedBuilding){
+            overlay_ctx.globalAlpha = 1;
+        }
+        else {
+            overlay_ctx.globalAlpha = 0.5;
+        }
         // img.style.left = position[0] + building.left * contextScale + "px"
         // img.style.top = position[1] + building.top * contextScale + "px"
         // img.style.width = img_data[1] * contextScale + "px"
         // img.style.height = img_data[2] * contextScale + "px"
-
+        
         overlay_ctx.drawImage(img, 
             position[0] + building.left * contextScale, 
             position[1] + building.top * contextScale, 
@@ -94,7 +98,7 @@ function drawBuildings(position){
     }
 }
 
-// Panning
+// Mouse Events
 function onMouseDown(e){
     currentlyClicked = true
     panStartPosition = [e.clientX, e.clientY]
@@ -103,6 +107,10 @@ function onMouseDown(e){
 function onMouseUp(e){
     currentlyClicked = false
     currentTranslation = [currentTranslation[0] + e.clientX - panStartPosition[0], currentTranslation[1] + e.clientY - panStartPosition[1]]
+    let delta = [Math.abs(e.clientX - panStartPosition[0]), Math.abs(e.clientY - panStartPosition[1])]
+    if(delta[0] < minimumDrag && delta[1] < minimumDrag){
+        onClick(e)
+    }
 }
 
 function onMouseMove(e){
@@ -112,11 +120,12 @@ function onMouseMove(e){
         drawBuildings(translateOffset)
     }
     else{
-        
+        let foundBuilding = findBuilding([e.clientX, e.clientY])
+        targettedBuilding = foundBuilding
+        drawBuildings(currentTranslation)
     }
 }
 
-// Zooming
 function onScroll(e){
     let direction = -Math.sign(e.deltaY)
 
@@ -134,6 +143,11 @@ function onScroll(e){
     drawBuildings(currentTranslation)
 }
 
+function onClick(e){
+    console.log(findBuilding([e.clientX, e.clientY])) 
+}
+
+// Coordinate conversions
 function screenToWorld(coordinates){
     return [
         (coordinates[0] - currentTranslation[0]) / (contextScale * backgroundImage.width), 
@@ -151,31 +165,26 @@ function worldToScreen(coordinates){
 function findBuilding(location){
     // console.log("yo")
     let which_building = null
-    for (let building_info of coordinates){
-        let building_dimensions = [building_images[building_info.name][1] * contextScale, building_images[building_info.name][2] * contextScale]
-        let building_location = worldToScreen([building_info.left / backgroundImage.width, building_info.top / backgroundImage.height])
-        
-        if(location[0] >= building_location[0] && 
-           location[0] <= building_location[0] + building_dimensions[0] && 
-           location[1] >= building_location[1]  && 
-           location[1] <= building_location[1] + building_dimensions[1]){
-            console.log("Yay")
-            which_building = building_info.name
-            break;
+    if(overlay_ctx.getImageData(...location,1,1).data[3] != 0){
+        for (let building_info of coordinates){
+            // TODO: This fucks things up cause this fn is getting called by mouse move and things might not be loaded
+            let building_dimensions = [building_images[building_info.name][1] * contextScale, building_images[building_info.name][2] * contextScale]
+            let building_location = worldToScreen([building_info.left / backgroundImage.width, building_info.top / backgroundImage.height])
+            
+            // If mouse is within bounding rect
+            if(location[0] >= building_location[0] && 
+            location[0] <= building_location[0] + building_dimensions[0] && 
+            location[1] >= building_location[1]  && 
+            location[1] <= building_location[1] + building_dimensions[1]){
+                which_building = building_info.name
+                break;
+            }
         }
     }
-
     return which_building
-}
-
-function onClick(e){
-    if(overlay_ctx.getImageData(e.clientX, e.clientY,1,1).data[3] != 0){
-        console.log(findBuilding([e.clientX, e.clientY])) 
-    }
 }
 
 document.addEventListener("mousedown", onMouseDown)
 document.addEventListener("mouseup", onMouseUp)
 document.addEventListener("mousemove", onMouseMove)
 document.addEventListener("wheel", onScroll)
-document.addEventListener("click", onClick)
