@@ -37,6 +37,10 @@ const zoomRange = [zoomMin, 2]
 
 let building_images = {}
 
+let currentlyClicked = false
+let currentTranslation = [0, 0]
+let panStartPosition = [0, 0]
+
 // Draw buildings
 for(let building_info of coordinates){
     let img_element = document.createElement("img")
@@ -44,14 +48,14 @@ for(let building_info of coordinates){
     img_element.classList.add("building")
     img_element.src = "static/building_pngs/" + building_info.name + ".png"
     img_element.setAttribute("draggable", false)
-    document.body.appendChild(img_element)
+    // document.body.appendChild(img_element)
 
     img_element.onload = () => {
         building_images[building_info.name] = [img_element, img_element.width, img_element.height]
-        img_element.style.left = building_info.left * contextScale + "px"
-        img_element.style.top = building_info.top * contextScale + "px"
-        img_element.style.width = img_element.width * contextScale + "px"
-        img_element.style.height = img_element.height * contextScale + "px"
+        // img_element.style.left = building_info.left * contextScale + "px"
+        // img_element.style.top = building_info.top * contextScale + "px"
+        // img_element.style.width = img_element.width * contextScale + "px"
+        // img_element.style.height = img_element.height * contextScale + "px"
 
         overlay_ctx.drawImage(img_element, 
             building_info.left * contextScale, 
@@ -61,9 +65,6 @@ for(let building_info of coordinates){
     }
 }
 
-let currentlyClicked = false
-let currentTranslation = [0, 0]
-let panStartPosition = [0, 0]
 
 function drawMap(position){
     ctx.clearRect(0, 0, mainCanvas.width, mainCanvas.height)
@@ -79,10 +80,11 @@ function drawBuildings(position){
     for(let building of coordinates){
         let img_data = building_images[building.name]
         let img = img_data[0]
-        img.style.left = position[0] + building.left * contextScale + "px"
-        img.style.top = position[1] + building.top * contextScale + "px"
-        img.style.width = img_data[1] * contextScale + "px"
-        img.style.height = img_data[2] * contextScale + "px"
+
+        // img.style.left = position[0] + building.left * contextScale + "px"
+        // img.style.top = position[1] + building.top * contextScale + "px"
+        // img.style.width = img_data[1] * contextScale + "px"
+        // img.style.height = img_data[2] * contextScale + "px"
 
         overlay_ctx.drawImage(img, 
             position[0] + building.left * contextScale, 
@@ -108,6 +110,9 @@ function onMouseMove(e){
         let translateOffset = [currentTranslation[0] + e.clientX - panStartPosition[0], currentTranslation[1] + e.clientY - panStartPosition[1]]
         drawMap(translateOffset)
         drawBuildings(translateOffset)
+    }
+    else{
+        
     }
 }
 
