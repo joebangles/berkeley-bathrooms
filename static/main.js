@@ -15,7 +15,6 @@ const overlayCanvas = document.getElementById("overlay-canvas")
 const overlay_ctx = overlayCanvas.getContext("2d", { willReadFrequently: true })
 overlayCanvas.width = window.innerWidth
 overlayCanvas.height = window.innerHeight
-overlayCanvas.style.zIndex = 2
 
 // Initialize scale and offset logic
 const zoomSpeed = 0.1
@@ -41,6 +40,9 @@ let building_images = {}
 let currentlyClicked = false
 let currentTranslation = [0, 0]
 let panStartPosition = [0, 0]
+
+// Sidebar
+const sidebar = document.getElementById("sidebar")
 
 // Draw buildings
 for(let building_info of coordinates){
@@ -178,6 +180,8 @@ function onClick(e){
         
         drawMap(currentTranslation)
         drawBuildings(currentTranslation)
+
+        console.log(building_name)
     } 
 }
 
