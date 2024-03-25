@@ -21,12 +21,19 @@ canvas {
     overflow: hidden; /* Hide scrollbars */
 }
 
+.bathroom-select {
+    display: none;
+}
+
+.show-bathroom-select {
+    display:block;
+}
+
 .sidebar-item {
     /* border: 1px solid gray; */
     border: none;
     width: 28vw;
     margin: 1vh;
-    padding: 1vh;
 }
 
 .centered-text {
@@ -40,6 +47,7 @@ canvas {
     text-align: center;
     background-color: #bcc8e2;
     border-radius: 2vh;
+    padding: 1vh;
 }
 
 .floor-button {
@@ -56,6 +64,8 @@ canvas {
     font-size:large;
     cursor: pointer;
     transition: 0.3s;
+    width: 100%;
+    margin: none;
 }
 
 .floor-button:hover {
@@ -83,6 +93,13 @@ canvas {
     left: 45%;
 }
 
+.plushozi {
+    left: 25%;
+    right: 25%;
+    height: 10%;
+    top: 45%;
+}
+
 .rotate-plus {
     transform: rotate(90deg);
 }
@@ -92,11 +109,8 @@ canvas {
     right: 50%;
 }
 
-.plushozi {
-    left: 25%;
-    right: 25%;
-    height: 10%;
-    top: 45%;
+.floor-container {
+    padding: 0;
 }
 
 #sidebar {

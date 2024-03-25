@@ -43,6 +43,7 @@ let panStartPosition = [0, 0]
 
 // Sidebar
 const sidebar = document.getElementById("sidebar")
+let openedFloor = null
 
 // Draw buildings
 for(let building_info of coordinates){
@@ -73,7 +74,6 @@ for(let building_info of coordinates){
             img_element.height * contextScale)
     }
 }
-console.log(building_images)
 
 function drawMap(position){
     ctx.clearRect(0, 0, mainCanvas.width, mainCanvas.height)
@@ -172,8 +172,13 @@ function onClick(e){
         contextScale = focusScale
         let building_info = building_images[building_name]
         
-        let newX = Math.min(Math.max((-building_info.left) * contextScale + mainCanvas.width / 2 -  building_info.width / 2, mainCanvas.width-backgroundImage.width * contextScale), 0)
-        let newY = Math.min(Math.max((-building_info.top) * contextScale + mainCanvas.height / 2 - building_info.height / 2, mainCanvas.height-backgroundImage.height * contextScale), 0)
+        console.log(sidebar.offsetWidth)
+
+        let unclampedX = sidebar.offsetWidth /  2  - building_info.left * contextScale + mainCanvas.width / 2 -  building_info.width / 2
+        let unclampedY = -building_info.top * contextScale + mainCanvas.height / 2 - building_info.height / 2
+
+        let newX = Math.min(Math.max(unclampedX, mainCanvas.width-backgroundImage.width * contextScale), 0)
+        let newY = Math.min(Math.max(unclampedY, mainCanvas.height-backgroundImage.height * contextScale), 0)
         
         currentTranslation[0] = newX
         currentTranslation[1] = newY
@@ -182,7 +187,31 @@ function onClick(e){
         drawBuildings(currentTranslation)
 
         console.log(building_name)
-    } 
+    }
+    if(e.target.classList.contains("floor-button")){
+
+        let plus_vert = e.target.querySelector(".plusvert")
+        let plus_hozi = e.target.querySelector(".plushozi")
+
+        if(e.target !== openedFloor){
+            openedFloor = e.target
+            let to_expand = e.target.parentNode.querySelector(".bathroom-select")
+            to_expand.classList.add("show-bathroom-select")
+
+            plus_vert.classList.add("rotate-plus")
+            plus_hozi.classList.add("shrink-plus")
+            plus_hozi.classList.add("rotate-plus")
+        }
+        else {
+            openedFloor = null
+            let to_retract = e.target.parentNode.querySelector(".bathroom-select")
+            to_retract.classList.remove("show-bathroom-select")
+
+            plus_vert.classList.remove("rotate-plus")
+            plus_hozi.classList.remove("shrink-plus")
+            plus_hozi.classList.remove("rotate-plus")
+        }
+    }
 }
 
 // Coordinate conversions

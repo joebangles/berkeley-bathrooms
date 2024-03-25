@@ -13,20 +13,29 @@
             <div class="sidebar-item nameplate">
                 <span>Dwinelle</span>
             </div>
-            <button class="sidebar-item floor-button">
-                <span class="centered-text">Floor 1</span>
-                <div class="plus-outline centered-text">
-                    <span class="plusc plusvert"></span>
-                    <span class="plusc plushozi"></span>
+            <div class="sidebar-item" style="border:1px solid black">
+                <button class="floor-button">
+                    <span class="centered-text">Floor 1</span>
+                    <div class="plus-outline centered-text">
+                        <span class="plusc plusvert"></span>
+                        <span class="plusc plushozi"></span>
+                    </div>
+                </button>
+                <div class="bathroom-select">
+                    <div class="floor-map">
+                        hallo
+                    </div>
                 </div>
-            </button>
-            <button class="sidebar-item floor-button">
-                <span class="centered-text">Floor 1</span>
-                <div class="plus-outline centered-text">
-                    <span class="plusc plusvert"></span>
-                    <span class="plusc plushozi"></span>
-                </div>
-            </button>
+            </div>
+            <div class="sidebar-item">
+                <button class="floor-button" onclick="floorButtonClick()">
+                    <span class="centered-text">Floor 2</span>
+                    <div class="plus-outline centered-text">
+                        <span class="plusc plusvert"></span>
+                        <span class="plusc plushozi"></span>
+                    </div>
+                </button>
+            </div>
         </div>
         <script type="module" src="{{url_for('static', filename='main.js')}}"></script>
     </body>

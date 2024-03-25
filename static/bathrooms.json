@@ -1,0 +1,43 @@
+[
+    {
+        "name":"dwinelle",
+        "floor A":[
+            {
+                "name":""
+            }
+        ],
+        "floor B":[
+            {
+                "name":""
+            }
+        ],
+        "floor C":[
+            {
+                "name":"Men's Bathroom"
+            },
+            {
+                "name":"Women's Bathroom"
+            }
+        ],
+        "floor D":[
+            {
+                "name":""
+            }
+        ],
+        "floor E":[
+            {
+                "name":""
+            }
+        ],
+        "floor F":[
+            {
+                "name":""
+            }
+        ],
+        "floor G":[
+            {
+                "name":""
+            }
+        ]
+    }
+]
