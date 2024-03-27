@@ -120,16 +120,20 @@ function drawBuildings(position){
 
 // Mouse Events
 function onMouseDown(e){
-    currentlyClicked = true
-    panStartPosition = [e.clientX, e.clientY]
+    if(e.target.id == "overlay-canvas"){
+        currentlyClicked = true
+        panStartPosition = [e.clientX, e.clientY]
+    }
 }
 
 function onMouseUp(e){
-    currentlyClicked = false
-    currentTranslation = [
-        Math.min(Math.max(currentTranslation[0] + e.clientX - panStartPosition[0], mainCanvas.width- backgroundImage.width * contextScale), 0),
-        Math.min(Math.max(currentTranslation[1] + e.clientY - panStartPosition[1], mainCanvas.height-backgroundImage.height * contextScale), 0)
-    ]
+    if(currentlyClicked){
+        currentlyClicked = false
+        currentTranslation = [
+            Math.min(Math.max(currentTranslation[0] + e.clientX - panStartPosition[0], mainCanvas.width- backgroundImage.width * contextScale), 0),
+            Math.min(Math.max(currentTranslation[1] + e.clientY - panStartPosition[1], mainCanvas.height-backgroundImage.height * contextScale), 0)
+        ]
+    }
     let delta = [Math.abs(e.clientX - panStartPosition[0]), Math.abs(e.clientY - panStartPosition[1])]
     if(delta[0] < minimumDrag && delta[1] < minimumDrag){
         onClick(e)
