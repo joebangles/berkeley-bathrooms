@@ -12,9 +12,6 @@ def index():
 
 @app.route("/bathrooms")
 def bathrooms():
-    with open("static/coordinates.json") as f:
-        data = json.load(f)
-    print(data)
     return render_template("main.html")
 
 @app.route('/hello')

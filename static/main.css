@@ -31,8 +31,6 @@ canvas {
 }
 
 .sidebar-item {
-    /* border: 1px solid gray; */
-    border: none;
     width: 425px;
     margin: 10px;
 }

@@ -1,4 +1,5 @@
-import coordinates from './coordinates.json' assert { type: 'json' };
+import coordinates from './data/coordinates.json' assert { type: 'json' };
+import bathrooms from './data/bathrooms.json' assert {type: 'json'}
 
 // Scroll prevention
 const b = document.body;
@@ -24,33 +25,37 @@ let contextScale = startingScale
 let targettedBuilding = null
 let minimumDrag = 5;
 
+let currentlyClicked = false
+let currentTranslation = [0, 0]
+let panStartPosition = [0, 0]
+
 // Draw background image
 const backgroundImageDimensions = [6600,3178]
 const backgroundImage = new Image(...backgroundImageDimensions);
 backgroundImage.onload = () => {
     ctx.drawImage(backgroundImage, 0, 0, backgroundImage.width * contextScale, backgroundImage.height * contextScale)
 }
-backgroundImage.src = "static/bg_map2.png";
+backgroundImage.src = "static/img/map/bg_map2.png";
 
 const zoomMin = Math.max(mainCanvas.width / backgroundImage.width, mainCanvas.height / backgroundImage.height)
 const zoomRange = [zoomMin, 2]
 
 let building_images = {}
 
-let currentlyClicked = false
-let currentTranslation = [0, 0]
-let panStartPosition = [0, 0]
-
 // Sidebar
 const sidebar = document.getElementById("sidebar")
 let openedFloor = null
+let buildingFloorList = null
+let btrms = bathrooms
+
+console.log(btrms)
 
 // Draw buildings
 for(let building_info of coordinates){
     let img_element = document.createElement("img")
     img_element.id = building_info.name
     img_element.classList.add("building")
-    img_element.src = "static/building_pngs/" + building_info.name + ".png"
+    img_element.src = "static/img/building/" + building_info.name + ".png"
     img_element.setAttribute("draggable", false)
     // document.body.appendChild(img_element)
 
@@ -120,9 +125,9 @@ function drawBuildings(position){
 
 // Mouse Events
 function onMouseDown(e){
+    panStartPosition = [e.clientX, e.clientY]
     if(e.target.id == "overlay-canvas"){
         currentlyClicked = true
-        panStartPosition = [e.clientX, e.clientY]
     }
 }
 
@@ -138,6 +143,9 @@ function onMouseUp(e){
     if(delta[0] < minimumDrag && delta[1] < minimumDrag){
         onClick(e)
     }
+    // if(e.target.closest(".floor-button")){
+    //     onClick(e)
+    // }
 }
 
 function onMouseMove(e){
@@ -192,14 +200,18 @@ function onClick(e){
 
         console.log(building_name)
     }
-    if(e.target.classList.contains("floor-button")){
+    if(e.target.closest(".floor-button")){
+        let clickedFloor = e.target.closest(".sidebar-item")
 
-        let plus_vert = e.target.querySelector(".plusvert")
-        let plus_hozi = e.target.querySelector(".plushozi")
+        let newPlusItems = [clickedFloor.querySelector(".plusvert"), clickedFloor.querySelector(".plushozi")]
+        let oldPlusItems = [openedFloor.querySelector(".plusvert"), openedFloor.querySelector(".plushozi")]
 
-        if(e.target !== openedFloor){
-            openedFloor = e.target
-            let to_expand = e.target.parentNode.querySelector(".bathroom-select")
+        console.log(clickedFloor)
+        console.log(openedFloor)
+
+        if(clickedFloor !== openedFloor){
+            openedFloor = clickedFloor
+            let to_expand = clickedFloor.querySelector(".bathroom-select")
             to_expand.classList.add("show-bathroom-select")
 
             plus_vert.classList.add("rotate-plus")
@@ -208,7 +220,7 @@ function onClick(e){
         }
         else {
             openedFloor = null
-            let to_retract = e.target.parentNode.querySelector(".bathroom-select")
+            let to_retract = clickedFloor.querySelector(".bathroom-select")
             to_retract.classList.remove("show-bathroom-select")
 
             plus_vert.classList.remove("rotate-plus")
