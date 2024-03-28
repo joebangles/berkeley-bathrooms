@@ -2,12 +2,18 @@
     "dwinelle":{
         "floor A":[
             {
-                "name":""
+                "name":"Men's Bathroom"
+            },
+            {
+                "name":"Women's Bathroom"
             }
         ],
         "floor B":[
             {
-                "name":""
+                "name":"Men's Bathroom"
+            },
+            {
+                "name":"Women's Bathroom"
             }
         ],
         "floor C":[
@@ -20,23 +26,49 @@
         ],
         "floor D":[
             {
-                "name":""
+                "name":"Men's Bathroom"
+            },
+            {
+                "name":"Women's Bathroom"
             }
         ],
         "floor E":[
             {
-                "name":""
+                "name":"Men's Bathroom"
+            },
+            {
+                "name":"Women's Bathroom"
             }
         ],
         "floor F":[
             {
-                "name":""
+                "name":"Men's Bathroom"
+            },
+            {
+                "name":"Women's Bathroom"
             }
         ],
         "floor G":[
             {
-                "name":""
+                "name":"Men's Bathroom"
+            },
+            {
+                "name":"Women's Bathroom"
             }
+        ]
+    },
+    "asuc":{
+        "Floor 1":[
+            "Men's Bathroom", 
+            "Women's Bathroom"
+        ], 
+        "Floor 2":[
+            "Men's Bathroom", 
+            "Women's Bathroom"
+        ], 
+        "Floor 3":[
+            "Men's Bathroom", 
+            "Women's Bathroom"
         ]
     }
 }

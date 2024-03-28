@@ -2,16 +2,19 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
         <title>Bathrooms</title>
+        
         <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
     </head>
     
     <body width="100vw" height="100vh">
         <canvas id="canvas" width="100vw" height="100vh"></canvas>
         <canvas id="overlay-canvas" width="100vw" height="100vh"></canvas>
-        <div id="sidebar">
+        <div class="sidebar hide-sidebar">
             <div class="sidebar-item nameplate">
-                <span>Dwinelle</span>
+                Dwinelle
             </div>
             <div class="sidebar-item">
                 <button class="floor-button">
@@ -27,21 +30,8 @@
                     </div>
                 </div>
             </div>
-            <div class="sidebar-item">
-                <button class="floor-button">
-                    <span class="centered-text">Floor 2</span>
-                    <div class="plus-outline centered-text">
-                        <span class="plusc plusvert"></span>
-                        <span class="plusc plushozi"></span>
-                    </div>
-                </button>
-                <div class="bathroom-select">
-                    <div class="floor-map">
-                        hallo
-                    </div>
-                </div>
-            </div>
         </div>
-        <script type="module" src="{{url_for('static', filename='main.js')}}"></script>
+        <script src="https://www.unpkg.com/browse/react@18.2.0/umd/react.development.js"></script>
+        <script type="module" src="{{url_for('static', filename='src/main.js')}}"></script>
     </body>
 </html>

@@ -1,10 +1,11 @@
-import coordinates from './data/coordinates.json' assert { type: 'json' };
-import bathrooms from './data/bathrooms.json' assert {type: 'json'}
+import coordinates from './../data/coordinates.json' assert { type: 'json' };
+import buildingFloorList from './../data/bathrooms.json' assert {type: 'json'}
 
 // Scroll prevention
 const b = document.body;
 b.style.setProperty('--st', -(document.documentElement.scrollTop) + "px");
 b.classList.add('noscroll');
+
 
 // Initialize Canvas
 const mainCanvas = document.getElementById("canvas")
@@ -43,15 +44,13 @@ const zoomRange = [zoomMin, 2]
 let building_images = {}
 
 // Sidebar
-const sidebar = document.getElementById("sidebar")
 let openedFloor = null
-let buildingFloorList = null
-let btrms = bathrooms
-
-console.log(btrms)
+let builtSidebars = {}
 
 // Draw buildings
 for(let building_info of coordinates){
+    builtSidebars[building_info.name] = null
+
     let img_element = document.createElement("img")
     img_element.id = building_info.name
     img_element.classList.add("building")
@@ -67,11 +66,6 @@ for(let building_info of coordinates){
             "top": building_info.top, 
             "left": building_info.left
         }
-        // img_element.style.left = building_info.left * contextScale + "px"
-        // img_element.style.top = building_info.top * contextScale + "px"
-        // img_element.style.width = img_element.width * contextScale + "px"
-        // img_element.style.height = img_element.height * contextScale + "px"
-
         overlay_ctx.drawImage(img_element, 
             building_info.left * contextScale, 
             building_info.top * contextScale, 
@@ -178,27 +172,67 @@ function onScroll(e){
     drawBuildings(currentTranslation)
 }
 
+function getSidebar(buildingName){
+    if(builtSidebars[buildingName]){
+        return builtSidebars[buildingName]
+    }
+    
+    let sidebar = document.createElement("div")
+    sidebar.classList.add("sidebar")
+
+    let nameplate = document.createElement("div")
+    nameplate.classList.add("sidebar-item", "nameplate")
+    nameplate.innerHTML = buildingName
+
+    sidebar.appendChild(nameplate)
+
+    for(let floorName in buildingFloorList[buildingName].keys){
+        let item = document.createElement("div")
+        item.classList.add("sidebar-item")
+        sidebar.appendChild(item)
+
+        let button = document.createElement("button")
+        button.classList.add("floor-button")
+        item.appendChild(button)
+
+        let floorTitle = document.createElement("span")
+        floorTitle.classList.add("centered-text")
+        floorTitle.innerHTML = floorName
+        button.appendChild(floorTitle)
+
+        let plusSign = document.createElement("div")
+    }
+}
+
+function onClickBuilding(buildingName){
+    // Focus in
+    contextScale = focusScale
+    let building_info = building_images[buildingName]
+
+    let unclampedX = 450 /  2  - building_info.left * contextScale + mainCanvas.width / 2 -  building_info.width / 2
+    let unclampedY = -building_info.top * contextScale + mainCanvas.height / 2 - building_info.height / 2
+
+    let newX = Math.min(Math.max(unclampedX, mainCanvas.width-backgroundImage.width * contextScale), 0)
+    let newY = Math.min(Math.max(unclampedY, mainCanvas.height-backgroundImage.height * contextScale), 0)
+    
+    currentTranslation[0] = newX
+    currentTranslation[1] = newY
+    
+    drawMap(currentTranslation)
+    drawBuildings(currentTranslation)
+
+    // Show sidebar
+    if(openedFloor == null){
+        sidebar.classList.remove("hide-sidebar")
+    }
+
+
+}
+
 function onClick(e){
-    let building_name = findBuilding([e.clientX, e.clientY])
-    if(building_name !== null){
-        contextScale = focusScale
-        let building_info = building_images[building_name]
-        
-        console.log(sidebar.offsetWidth)
-
-        let unclampedX = sidebar.offsetWidth /  2  - building_info.left * contextScale + mainCanvas.width / 2 -  building_info.width / 2
-        let unclampedY = -building_info.top * contextScale + mainCanvas.height / 2 - building_info.height / 2
-
-        let newX = Math.min(Math.max(unclampedX, mainCanvas.width-backgroundImage.width * contextScale), 0)
-        let newY = Math.min(Math.max(unclampedY, mainCanvas.height-backgroundImage.height * contextScale), 0)
-        
-        currentTranslation[0] = newX
-        currentTranslation[1] = newY
-        
-        drawMap(currentTranslation)
-        drawBuildings(currentTranslation)
-
-        console.log(building_name)
+    let buildingName = findBuilding([e.clientX, e.clientY])
+    if(buildingName !== null){
+        onClickBuilding(buildingName)
     }
     if(e.target.closest(".floor-button")){
         let clickedFloor = e.target.closest(".sidebar-item")
